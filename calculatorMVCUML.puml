@@ -1,0 +1,120 @@
+@startuml
+'Вертикальный срез
+'класс для извлечения данных из базы данных
+class calculatorMVC.db.fletch.FletchData {
++ String fletchData()
+}
+
+'Горизонтальный уровень
+'класс для ввода и вывода данных
+class calculatorMVC.view.InputOutputLayer {
++ String getInput()
+~ void displayOutput(String)
+}
+'Вертикальный срез
+'интерфейс для извлечения данных из базы данных
+interface calculatorMVC.db.fletch.Fletchable {
+~ String fletchData()
+}
+'Горизонтальный уровень
+'класс для реализации консольного интерфейса
+class calculatorMVC.view.ConsoleView {
+~ InputOutputLayer ioLayer
+~ CalculationLayer calcLayer
++ void runCalculator()
+}
+'Горизонтальный уровень
+'класс для вычислений
+class calculatorMVC.model.CalculationLayer {
++ double add(double,double)
++ double subtract(double,double)
++ double multiply(double,double)
++ double divide(double,double)
+}
+'Вертикальный срез
+'Класс для вывода данных из консоли
+class calculatorMVC.view.output.OutputSlice {
+~ void displayOutput(String)
+}
+'Вертикальный срез
+'класс для деления
+class calculatorMVC.model.divideOperation.DivideOperation {
+~ double firstArg
+~ double secondArg
++ double divide()
+}
+'Вертикальный срез
+'класс для сохранения данных в базу данных
+class calculatorMVC.db.save.SaveData {
++ void saveData(String)
+}
+'Вертикальный срез
+'класс для умножения
+class calculatorMVC.model.multiplyOperation.MultiplyOperation {
+~ double firstArg
+~ double secondArg
++ double multiply()
+}
+'Основной класс программы
+class calculatorMVC.Main {
++ {static} void main(String[])
+}
+'Вертикальный срез
+'Класс для ввода данных из консоли
+class calculatorMVC.view.input.InputSlice {
+~ String getInput()
+}
+'Горизонтальный слой
+'класс для взаимодействия с базой данных(сохранение и извлечение)
+class calculatorMVC.db.DatabaseManagementSlice {
++ void saveData(String)
+~ String fetchData()
+}
+'Вертикальный срез
+'класс для вычитания
+class calculatorMVC.model.substractOperation.SubstractOperation {
+~ double firstArg
+~ double secondArg
++ double subtract()
+}
+'Вертикальный срез
+'интерфейс для сохранения данных в базу данных
+interface calculatorMVC.db.save.Savable {
+~ void saveData(String)
+}
+'Вертикальный срез
+'интерфейс для взаимодействия с пользователем
+interface calculatorMVC.view.IView {
+~ void runCalculator()
+}
+'Вертикальный срез
+'класс для сложения
+class calculatorMVC.model.sumOperation.SumOperation {
+~ double firstArg
+~ double secondArg
++ double sum()
+}
+
+calculatorMVC.db.fletch.Fletchable <|.. calculatorMVC.db.fletch.FletchData
+calculatorMVC.view.IView <|.. calculatorMVC.view.ConsoleView
+calculatorMVC.db.save.Savable <|.. calculatorMVC.db.save.SaveData
+
+Main --> DatabaseManagementSlice : creates
+Main --> ConsoleView : creates
+Main --> CalculationLayer : creates
+
+ConsoleView --> InputOutputLayer : uses
+
+InputOutputLayer --> InputSlice : uses
+InputOutputLayer --> OutputSlice : uses
+
+CalculationLayer --> DivideOperation : uses
+CalculationLayer --> MultiplyOperation : uses
+CalculationLayer --> SubstractOperation : uses
+CalculationLayer --> SumOperation : uses
+
+DatabaseManagementSlice --> Savable : uses
+DatabaseManagementSlice --> Fletchable : uses
+
+
+@enduml
